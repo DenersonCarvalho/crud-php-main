@@ -9,5 +9,8 @@ echo $produto->getCat();
 echo $produto->getPreco();
 echo $produto->getQuant();
 //var_dump($produto);
-$categoria = new Categoria();
+$categoria = new Categoria(1);
+echo $categoria->getId();
+echo $categoria->getNome();
+
 //var_dump($categoria);

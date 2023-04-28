@@ -7,7 +7,20 @@ class Categoria implements crud{
 
     public function __construct($id=false){
         if($id){
-            echo "Testando o construtor";
+            
+            $sql = "SELECT * FROM categoria WHERE id = ?";
+            $conexao = DB::conexao();
+            
+            $stmt = $conexao->prepare($sql);
+            $stmt->bindParam(1,$id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            foreach($stmt as $obj){
+                $this->setId($obj['id']);
+                $this->setNome($obj['nome']);
+            }
+
+            //$stmt = DB::conexao()->prepare($sql);
         }
     }
 

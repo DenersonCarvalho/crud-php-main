@@ -2,7 +2,7 @@
 include_once("classes/Produto.class.php");
 include_once("classes/Categoria.class.php");
 
-$produto = new Produto(2);
+$produto = new Produto(3);
 echo $produto->getId();
 echo $produto->getNome();
 echo $produto->getCat();

@@ -1,4 +1,4 @@
-<?php
+<?ph
     class db{
         /*public static $servidor = "localhost";
         public static $root = "root";

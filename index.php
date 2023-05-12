@@ -1,14 +1,35 @@
 <?php
-include_once("classes/Produto.class.php");
-include_once("classes/Categoria.class.php");
+    include_once('classes/produto.class.php');
+    include_once('classes/categoria.class.php');
 
-$produto = new Produto(3);
-echo $produto->getId();
-echo $produto->getNome();
-echo $produto->getPreco();
-//var_dump($produto);
-$categoria = new Categoria(1);
-echo $categoria->getId();
-echo $categoria->getNome();
+    //$categoria = new Categoria();
+    //echo $produto->getId(). "<br>";
+    //echo $produto->getNome(). "<br>";
 
-//var_dump($categoria);
+    //$produto = new Produto();
+    //echo $produto->getId(). "<br>";
+    //echo $produto->getNome(). "<br>";
+    //echo $produto->getPreco(). "<br>";
+
+    //$produto =new Produto();  //esse aqui é pro create, cadastrar produto
+    //$produto->setCategoria(2);
+    //$produto->setNome("Produto 01");
+    //$produto->setPreco(10.00);
+    //$produto->setQuantidade(2000);
+    //$produto->adicionar();
+
+    $produtos = Produto::Listar(); // esse aqui é pra listar tudo que tem no banco crud
+    if($produtos){  //já que isso é um array, usar foreach pra quebrar e ler tudo que ele pegar
+        foreach($produtos as $produto){
+            echo $produto->getId(). "</br>";
+            echo $produto->getNome(). "</br>";
+            echo $produto->getCategoria(). "</br>";
+            echo $produto->getPreco(). "</br>";
+            echo $produto->getQuantidade(). "</br>";
+            echo " ------ ";
+            echo "</br>";
+
+        }
+    }
+
+?>

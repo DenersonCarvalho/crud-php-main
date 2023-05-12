@@ -1,7 +1,7 @@
 <?php
 
-    include_once("interface/crud.php");
-    include_once("classes/db.class.php");
+    include_once("interfaces/crud.php");
+    include_once("classes/DB.class.php");
 
 class Produto implements crud{
     protected $id;
@@ -30,46 +30,45 @@ class Produto implements crud{
     public function setId($id){
         $this -> id = $id;
     }
+    public function getId(){
+        return $this -> id;
+    }
     public function setCategoria($categoria_id){
         $this -> categoria_id = $categoria_id;
+    }
+    public function getCategoria(){
+        return $this -> categoria_id;
     }
     public function setNome($nome){
         $this -> nome = $nome;
     }
-    public function setPreco($preco){
-        $this -> preco = $preco;
-    }
-    public function setQuantidade($quantidade){
-        $this -> quantidade = $quantidade;
-    }
-    #getters
-    public function getId(){
-        return $this -> id;
-    }
-    public function getCat(){
-        return $this -> categoria_id;
-    }
     public function getNome(){
         return $this -> nome;
     }
+    public function setPreco($preco){
+        $this -> preco = $preco;
+    }
     public function getPreco(){
         return $this->preco;
+    }
+    public function setQuantidade($quantidade){
+        $this -> quantidade = $quantidade;
     }
     public function getQuantidade(){
         return $this->quantidade;
     }
 
-    public function adicionar(){    
+    public function adicionar(){    //C
         $sql = "INSERT INTO produtos (categoria_id, nome, preco, quantidade)
-                VALUES (?, ?, ?, ?)";       
+                VALUES (:categoria_id, :nome, :preco, :quantidade)";       
                 
-            try{       
+            try{        //try-catch serve como if else, só que usado pra tratar erros e mostrar só uma mensagem
                 $conexao = DB::conexao();
-                $stmt = $conexao->prepare($sql); 
-                $stmt->bindParam(1, $this->categoria_id);
-                $stmt->bindParam(2, $this->nome);
-                $stmt->bindParam(3, $this->preco);
-                $stmt->bindParam(4, $this->quantidade); 
+                $stmt = $conexao->prepare($sql); //$stmt =  STATEMANT
+                $stmt->bindParam(':categoria_id', $this->categoria_id);
+                $stmt->bindParam(':nome', $this->nome);
+                $stmt->bindParam(':preco', $this->preco);
+                $stmt->bindParam('quantidade', $this->quantidade); //os numeros representam a ordem dos "?"
                 $stmt->execute();
             }catch(PDOException $e){
                 echo "Erro na Função Adicionar Produto:" .$e->getMessage();
@@ -77,15 +76,15 @@ class Produto implements crud{
             }  
 
 
-    public function listar(){  
+    public function listar(){   //R
         $sql = "SELECT * FROM produtos";
         $conexao = DB::conexao();
         $stmt = $conexao->prepare($sql);
         $stmt->execute();
-        $registros = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        $registros = $stmt->fetchAll(PDO::FETCH_ASSOC); //os registros que vem do bd tá na $registros e o fetchall é o que traz os dados do bd
         if($registros){
-                $objetos = array();  
-                foreach($registros as $registro){  
+                $objetos = array();   //foreach serve para tratar arrays, $objetos vai guardar e transformar para objetos
+                foreach($registros as $registro){  //esse foreach vai se repetir pra cada objeto, pegando todos os dados
                     $temporario = new Produto();
                     $temporario->setId($registro['id']);
                     $temporario->setNome($registro['nome']);
@@ -98,25 +97,25 @@ class Produto implements crud{
         }
         return false;
     }
-    public function atualizar(){
+    public function atualizar(){            //UPDATE
         if($this->id){
-            $sql = "UPDATE produtos SET nome = :nome, categoria = :categoria, preco = :preco, quantidade = :quantidade WHERE id = :id";
-            $stmt = DB::conexao()->prepare($sql);
-            $stmt->bindParam(':id', $this->id);
-            $stmt->bindParam(':nome', $this->nome);
-            $stmt->bindParam(':categoria', $this->categoria_id);
-            $stmt->bindParam(':preco', $this->preco);
-            $stmt->bindParam(':quantidade', $this->quantidade);
-            $stmt->execute();
+        $sql = "UPDATE produtos SET nome = :nome, categoria_id = :categoria_id, preco = :preco, quantidade = :quantidade WHERE id = :id";
+        $stmt = DB::conexao()->prepare($sql);
+        $stmt->bindParam(':nome', $this->nome);
+        $stmt->bindParam(':categoria_id', $this->categoria_id);
+        $stmt->bindParam(':preco', $this->preco);
+        $stmt->bindParam(':quantidade', $this->quantidade);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
         }
-    }   
-    public function excluir(){
+    }
+    public function excluir(){              //DELETE
         if($this->id){
             $sql = "DELETE FROM produtos WHERE id = :id";
             $stmt = DB::conexao()->prepare($sql);
-            $stmt->bindParam(':id', $this->id); 
+            $stmt->bindParam(':id', $this->id);
             $stmt->execute();
         }
-    }      
+    } 
 }
 ?>
